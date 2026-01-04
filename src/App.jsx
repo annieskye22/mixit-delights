@@ -515,7 +515,7 @@ export default function VividAppV2() {
                 const locationObj = { name: data.display_name?.split(',')[0] || "My Current Location", display_name: data.display_name, lat: latitude, lng: longitude }; 
                 setSelectedLocation(locationObj); 
                 setLocationQuery(locationObj.name); 
-                setManualAddress(data.display_name); 
+                setManualAddress(data.display_name); // AUTO-FILL ADDRESS
             } catch(e) { 
                 const locationObj = { name: "Current GPS Location", lat: latitude, lng: longitude }; 
                 setSelectedLocation(locationObj); 
@@ -729,8 +729,7 @@ export default function VividAppV2() {
     } else { displayItems = [{ title: 'Drops', items: menuItems.filter(i => i.type === category) }]; }
 
     return (
-      <div className={`p-6 pt-32 pb-32 space-y-8 animate-in fade-in duration-500 overflow-y-auto h-full no-scrollbar max-w-7xl mx-auto w-full`}>
-        {/* HERO: Orange -> Gold -> Black (Deep Sunset) */}
+      <div className={`p-6 pt-32 pb-32 space-y-8 animate-in fade-in duration-500 overflow-y-auto h-full max-w-7xl mx-auto w-full`}>
         <div className={`rounded-[2.5rem] p-8 relative overflow-hidden flex flex-col justify-between min-h-[220px] shadow-2xl group`}>
             {/* Dynamic Background with Noise/Gradient */}
             <div className={`absolute inset-0 bg-gradient-to-br from-[#FF8A00] via-[#E76F00] to-black z-0`}></div>
@@ -849,7 +848,7 @@ export default function VividAppV2() {
     );
   };
   const renderBuilder = () => { if (!selectedItem) return null; const total = cart.reduce((acc, i) => acc + i.price, selectedItem.price); return ( <div className={`h-full flex flex-col md:flex-row ${isDark ? 'bg-[#0B0B0D]' : 'bg-[#F2F2F7]'}`}> <div className={`flex-1 relative flex items-center justify-center overflow-hidden h-[50%] md:h-full bg-gradient-to-b ${isDark ? 'from-[#0B0B0D] to-black' : 'from-[#F2F2F7] to-white'}`}> <div className="absolute top-6 left-6 z-50 flex items-center gap-4"> <button onClick={() => setView('menu')} className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-all shadow-lg ${isDark ? 'bg-white/5 text-white hover:bg-white/10' : 'bg-white text-black hover:bg-gray-50'}`}><X size={20} /></button> </div> {selectedItem.image ? ( <img src={selectedItem.image} className="absolute inset-0 w-full h-full object-cover blur-3xl opacity-50 z-0" /> ) : ( <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 md:w-96 md:h-96 bg-gradient-to-tr ${selectedItem.color} blur-[120px] opacity-30 z-0`}></div> )} <div className="scale-125 z-10 transition-all"><StackVisualizer baseItems={selectedItem.baseIngredients || []} addOns={cart} color={selectedItem.color} type={selectedItem.type} isDark={isDark} /></div> </div> <BlurCard isDark={isDark} className={`h-[50%] md:h-full md:w-[450px] rounded-t-[3rem] md:rounded-none md:rounded-l-[3rem] p-10 border-b-0 md:border-l flex flex-col z-20 shadow-2xl`}> <div className="mb-6"> <div className="flex justify-between items-start mb-2"> <h3 className={`${themeClasses.text} font-black text-3xl md:text-4xl`}>{selectedItem.name}</h3> <div className={`px-5 py-2 rounded-xl border backdrop-blur ${isDark ? 'bg-white/5 border-white/10' : 'bg-black/5 border-black/5'}`}><span className={`text-[#FF8A00] font-black text-xl`}>₦{total}</span></div> </div> <p className={`${themeClasses.textMuted} text-sm mb-4`}>{selectedItem.desc}</p> <div className={`flex gap-2 text-xs p-4 rounded-2xl inline-flex w-full ${isDark ? 'bg-white/5 text-white/60' : 'bg-black/5 text-black/60'}`}><span className={`font-bold opacity-100 mr-2 text-[#FF8A00]`}>Base:</span>{selectedItem.baseIngredients?.map(b => b.name).join(', ')}</div> </div> <div className="flex-1 overflow-y-auto no-scrollbar"> <h4 className={`${themeClasses.textMuted} text-xs uppercase font-bold mb-4 tracking-widest`}>Add-ons</h4> <div className="grid grid-cols-3 gap-3 pb-6"> {selectedItem.addOns?.map((ing, i) => ( <button key={i} onClick={() => setCart([...cart, {...ing, uid: Math.random()}])} className={`aspect-square rounded-2xl flex flex-col items-center justify-center gap-2 border transition-all group active:scale-95 ${isDark ? 'bg-white/5 border-white/5 hover:bg-white/10' : 'bg-white border-black/5 hover:bg-gray-50 shadow-sm'}`}> <div className="text-3xl group-hover:scale-110 transition-transform">{ing.emoji}</div> <div className="text-center"><div className={`${themeClasses.text} text-xs font-bold leading-tight px-1`}>{ing.name}</div><div className={`text-[#FF8A00] text-[10px] font-mono mt-1`}>+₦{ing.price}</div></div> </button> ))} </div> </div> <button onClick={() => setView('location')} className={`w-full mt-4 bg-[#FF8A00] text-white font-bold py-6 rounded-3xl shadow-[0_10px_40px_-10px_rgba(255,138,0,0.5)] hover:shadow-[0_20px_40px_-10px_rgba(255,138,0,0.6)] hover:translate-y-[-2px] transition-all flex items-center justify-center gap-3 text-lg`}>Find Location <ArrowRight size={22} strokeWidth={3} /></button> </BlurCard> </div> ); };
-  const renderLocation = () => { return ( <div className={`h-full p-6 flex flex-col max-w-4xl mx-auto w-full ${themeClasses.bg}`}> <div className="flex items-center gap-4 mb-8 pt-8 md:pt-16"> <button onClick={() => setView('builder')} className={`p-3 rounded-2xl ${isDark ? 'bg-white/5 text-white hover:bg-white/10' : 'bg-white text-black hover:bg-gray-50 border border-black/5'}`}><ArrowLeft size={20}/></button> <h2 className={`text-2xl md:text-3xl font-black ${themeClasses.text}`}>Where to?</h2> </div> <div className="h-[400px] mb-6"> <PickerMap onLocationSelect={handleMapLocationSelect} /> </div> <div className="relative mb-6"> <Search className="absolute left-5 top-1/2 -translate-y-1/2 opacity-40" size={20} color={isDark ? 'white' : 'black'} /> <input autoFocus type="text" placeholder="Search streets, areas..." value={locationQuery} onChange={e => { setLocationQuery(e.target.value); if(selectedLocation && selectedLocation.name !== e.target.value) setSelectedLocation(null); }} className={`w-full rounded-2xl py-5 pl-14 pr-14 text-lg font-medium outline-none transition-all border-2 ${isDark ? `bg-white/5 border-transparent focus:border-[#FF8A00] text-white placeholder-white/30` : `bg-white border-transparent focus:border-[#FF8A00] text-black shadow-sm`}`}/> <button onClick={getMyLocation} className="absolute right-4 top-1/2 -translate-y-1/2 p-2 rounded-xl text-[#3A86FF] hover:bg-[#3A86FF]/10 transition-colors" title="Use my current location"><Crosshair size={22} /></button> </div> <div className="mb-4"> <label className={`text-xs ml-4 mb-2 block uppercase font-bold tracking-widest ${themeClasses.textMuted}`}>Address Details</label> <textarea value={manualAddress} onChange={e => setManualAddress(e.target.value)} placeholder="Apartment No, Bus Stop, Instructions..." className={`w-full rounded-2xl p-5 text-sm font-medium outline-none transition-all border-2 resize-none h-24 ${isDark ? `bg-white/5 border-transparent focus:border-[#FF8A00] text-white placeholder-white/30` : `bg-white border-transparent focus:border-[#FF8A00] text-black shadow-sm`}`}/> </div> <div className="pt-4 mt-auto"> <button disabled={!selectedLocation} onClick={handlePlaceOrder} className={`w-full py-6 rounded-3xl font-bold text-xl flex items-center justify-center gap-3 transition-all ${selectedLocation ? `bg-[#FF8A00] text-white shadow-[0_10px_30px_-5px_rgba(255,138,0,0.5)] hover:scale-[1.02]` : 'bg-gray-500/10 text-gray-500 cursor-not-allowed'}`}>Confirm Order <CheckCircle size={24} /></button> </div> </div> ); };
+  const renderLocation = () => { return ( <div className={`h-full p-6 flex flex-col max-w-4xl mx-auto w-full ${themeClasses.bg}`}> <div className="flex items-center gap-4 mb-8 pt-8 md:pt-16"> <button onClick={() => setView('builder')} className={`p-3 rounded-2xl ${isDark ? 'bg-white/5 text-white hover:bg-white/10' : 'bg-white text-black hover:bg-gray-50 border border-black/5'}`}><ArrowLeft size={20}/></button> <h2 className={`text-2xl md:text-3xl font-black ${themeClasses.text}`}>Where to?</h2> </div> <div className="h-[400px] mb-8"> <PickerMap onLocationSelect={handleMapLocationSelect} /> </div> <div className="mb-4"> <label className={`text-xs ml-4 mb-2 block uppercase font-bold tracking-widest ${themeClasses.textMuted}`}>Selected Location</label> <div className={`w-full rounded-2xl p-5 border-2 flex items-center gap-3 mb-4 ${isDark ? `bg-white/5 border-[#FF8A00]/50` : `bg-white border-[#FF8A00]/50 shadow-sm`}`}> <MapPin size={24} className="text-[#FF8A00]" /> <div> <div className={`font-bold ${themeClasses.text}`}>{selectedLocation?.name || "No location picked"}</div> <div className="text-xs opacity-50">{selectedLocation ? `${selectedLocation.lat.toFixed(4)}, ${selectedLocation.lng.toFixed(4)}` : "Drag map to select"}</div> </div> </div> <label className={`text-xs ml-4 mb-2 block uppercase font-bold tracking-widest ${themeClasses.textMuted}`}>Address Details</label> <textarea value={manualAddress} onChange={e => setManualAddress(e.target.value)} placeholder="Apartment No, Bus Stop, Instructions..." className={`w-full rounded-2xl p-5 text-sm font-medium outline-none transition-all border-2 resize-none h-24 ${isDark ? `bg-white/5 border-transparent focus:border-[#FF8A00] text-white placeholder-white/30` : `bg-white border-transparent focus:border-[#FF8A00] text-black shadow-sm`}`}/> </div> <div className="pt-4 mt-auto"> <button disabled={!selectedLocation} onClick={handlePlaceOrder} className={`w-full py-6 rounded-3xl font-bold text-xl flex items-center justify-center gap-3 transition-all ${selectedLocation ? `bg-[#FF8A00] text-white shadow-[0_10px_30px_-5px_rgba(255,138,0,0.5)] hover:scale-[1.02]` : 'bg-gray-500/10 text-gray-500 cursor-not-allowed'}`}>Confirm Order <CheckCircle size={24} /></button> </div> </div> ); };
   const renderTracking = () => { /* Same as before */
     const status = activeOrder?.status || 'received';
     const hasActiveOrder = activeOrder && activeOrder.status !== 'delivered';
@@ -866,43 +865,53 @@ export default function VividAppV2() {
               </div>
             </div>
          )}
-         {hasActiveOrder && (
-             <div className="absolute bottom-32 left-[5%] md:left-1/2 md:-translate-x-1/2 w-[90%] md:max-w-md p-6 z-20">
-                 {/* TRACKING CARD */}
-                 <BlurCard isDark={true} className="p-6 bg-[#111]/90 border-white/10 animate-in slide-in-from-bottom-10 shadow-2xl">
-                     <div className="flex items-center gap-4 mb-6">
-                        <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FF8A00] to-[#E76F00] p-[2px] shadow-lg`}><div className="w-full h-full rounded-2xl bg-black flex items-center justify-center text-2xl">{status === 'preparing' ? '🍳' : '🛵'}</div></div>
-                        <div>
-                            {status === 'preparing' ? (
-                                <>
-                                    <h3 className="text-white font-bold text-lg">Chef is cooking...</h3>
-                                    <p className="text-white/40 text-xs">Your meal is being prepared with love.</p>
-                                </>
-                            ) : (
-                                <>
-                                    <h3 className="text-white font-bold text-lg">{activeOrder.riderName || 'Assigning Rider...'}</h3>
-                                    <p className="text-white/40 text-xs">Mixit Dispatch • {activeOrder.eta ? `${activeOrder.eta} mins away` : 'Calculating...'}</p>
-                                </>
-                            )}
-                        </div>
-                        {status === 'dispatch' && activeOrder.riderPhone && (
-                            <div className="ml-auto flex gap-2">
-                                <a href={`tel:${activeOrder.riderPhone}`} className="w-10 h-10 rounded-full bg-green-500 flex items-center justify-center text-black hover:scale-110 transition-transform shadow-lg shadow-green-500/30"><Phone size={18} /></a>
-                            </div>
-                        )}
-                     </div>
-                     
-                     <div className="space-y-2">
-                         <div className="flex justify-between text-xs font-bold uppercase tracking-wider mb-2">
-                             <span className={`text-[#FF8A00]`}>{status === 'preparing' ? 'Cooking' : status === 'dispatch' ? 'On The Way' : 'Received'}</span>
-                             <span className="text-white/30">{status === 'dispatch' && activeOrder.eta ? `${activeOrder.eta} MINS` : '...'}</span>
-                         </div>
-                         <div className="h-2 bg-white/10 rounded-full overflow-hidden">
-                             <div className={`h-full bg-[#FF8A00] transition-all duration-1000 shadow-[0_0_10px_${BRAND_COLOR}]`} style={{ width: status === 'received' ? '20%' : status === 'preparing' ? '50%' : status === 'dispatch' ? '80%' : '100%' }}></div>
-                         </div>
-                     </div>
-                 </BlurCard>
+         <div className="absolute top-0 left-0 w-full p-6 z-20 pt-24 flex justify-between items-start pointer-events-none">
+             {hasActiveOrder && (
+                <button onClick={() => setShowReceipt(!showReceipt)} className={`ml-auto px-6 py-3 bg-black/80 backdrop-blur rounded-2xl text-white text-xs font-bold border border-white/10 pointer-events-auto flex items-center gap-2 hover:bg-[#FF8A00] transition-colors shadow-xl`}><FileText size={16} /> {showReceipt ? 'Hide Receipt' : 'View Receipt'}</button>
+             )}
+         </div>
+         {showReceipt && hasActiveOrder && (
+           <div className="absolute inset-0 z-30 bg-black/80 backdrop-blur-md p-8 animate-in fade-in flex flex-col justify-center items-center">
+              <div className="bg-[#111] border border-white/10 rounded-[2.5rem] p-8 relative w-full max-w-sm shadow-2xl">
+                 <button onClick={() => setShowReceipt(false)} className="absolute top-6 right-6 text-white/50 hover:text-white"><X size={24}/></button>
+                 <div className="text-center mb-8">
+                    <div className={`w-16 h-16 bg-[#FF8A00] rounded-full mx-auto flex items-center justify-center text-white mb-4 shadow-[0_0_20px_rgba(168,85,247,0.5)]`}><CheckCircle size={32} /></div>
+                    <h2 className="text-2xl font-black text-white">Order Receipt</h2>
+                    <p className="text-white/40 text-xs font-mono mt-1">ID: #{activeOrder.id.slice(0,6).toUpperCase()}</p>
+                 </div>
+                 <div className="space-y-4 mb-8 bg-white/5 p-6 rounded-2xl">
+                    <div className="flex justify-between text-white/70 text-sm border-b border-white/10 pb-3"><span>Item Base</span><span className="font-bold text-white">{activeOrder.itemName}</span></div>
+                    {activeOrder.items.map((item, i) => (<div key={i} className="flex justify-between text-white/70 text-sm"><span>+ {item.name}</span><span>₦{item.price}</span></div>))}
+                    <div className={`flex justify-between text-[#FF8A00] font-black text-xl pt-3 border-t border-white/10`}><span>Total</span><span>₦{activeOrder.total}</span></div>
+                 </div>
+                 <div className="bg-[#0B0B0D] p-5 rounded-2xl border border-white/5 flex items-center gap-4">
+                    <div className="w-10 h-10 rounded-full bg-[#3A86FF]/20 flex items-center justify-center text-[#3A86FF]"><MapPin size={20}/></div>
+                    <div>
+                      <div className="text-[10px] text-white/40 uppercase font-bold tracking-wider">Delivering To</div>
+                      <div className="text-white text-sm font-bold truncate max-w-[180px]">{typeof activeOrder.location === 'string' ? activeOrder.location : activeOrder.location?.name}</div>
+                      {activeOrder.manualAddress && <div className="text-white/60 text-xs mt-1 truncate max-w-[180px]">Note: {activeOrder.manualAddress}</div>}
+                    </div>
+                 </div>
+              </div>
+           </div>
+         )}
+         {!showReceipt && hasActiveOrder && (
+           <BlurCard isDark={true} className="absolute bottom-32 left-[5%] md:left-1/2 md:-translate-x-1/2 w-[90%] md:max-w-md p-6 z-20 bg-[#111]/90 border-white/10 animate-in slide-in-from-bottom-10 shadow-2xl">
+             <div className="flex items-center gap-4 mb-6">
+               <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br from-[#FF8A00] to-[#E76F00] p-[2px] shadow-lg`}><div className="w-full h-full rounded-2xl bg-black flex items-center justify-center text-2xl">🛵</div></div>
+               <div><h3 className="text-white font-bold text-lg">{activeOrder.riderName || 'Assigning Rider...'}</h3><p className="text-white/40 text-xs">Mixit Dispatch • 4.9 Stars</p></div>
+               <div className="ml-auto flex gap-2">
+                  {/* CALL BUTTON */}
+                  {activeOrder.riderPhone && (
+                    <a href={`tel:${activeOrder.riderPhone}`} className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-green-400 hover:bg-green-500 hover:text-white transition-colors"><Phone size={18}/></a>
+                  )}
+               </div>
              </div>
+             <div className="space-y-2">
+                 <div className="flex justify-between text-xs font-bold uppercase tracking-wider mb-2"><span className={`text-[#FF8A00]`}>{status === 'preparing' ? 'Cooking' : status === 'dispatch' ? 'On The Way' : 'Received'}</span><span className="text-white/30">{status === 'dispatch' && activeOrder.eta ? `${activeOrder.eta} MINS` : '...'}</span></div>
+                 <div className="h-2 bg-white/10 rounded-full overflow-hidden"><div className={`h-full bg-[#FF8A00] transition-all duration-1000 shadow-[0_0_10px_${BRAND_COLOR}]`} style={{ width: status === 'received' ? '20%' : status === 'preparing' ? '50%' : status === 'dispatch' ? '80%' : '100%' }}></div></div>
+             </div>
+           </BlurCard>
          )}
       </div>
     );
@@ -910,7 +919,7 @@ export default function VividAppV2() {
   const renderAdmin = () => { /* Same as before */
     if (editingMenuItem) {
       return (
-        <div className={`h-full p-6 pt-24 pb-32 flex flex-col items-center animate-in fade-in ${themeClasses.bg}`}>
+        <div className={`h-full p-6 pt-24 pb-32 flex flex-col items-center animate-in fade-in ${themeClasses.bg} overflow-y-auto`}>
            {/* ... Admin Edit Form (Same logic) ... */}
            {/* Simplified for response length, fully functional in prev version */}
            <div className="max-w-lg w-full">
@@ -1088,7 +1097,7 @@ export default function VividAppV2() {
     if (!showProfileContent) {
       if (authSuccess) {
         return (
-          <div className={`h-full p-6 pt-24 flex flex-col justify-center items-center animate-in fade-in zoom-in ${themeClasses.bg}`}>
+          <div className={`h-full p-6 pt-24 flex flex-col justify-center items-center animate-in fade-in zoom-in ${themeClasses.bg} overflow-y-auto`}>
              <div className="w-24 h-24 rounded-full bg-[#2ECC71] flex items-center justify-center mb-6 shadow-2xl shadow-green-500/50">
                <Check size={48} className="text-black" strokeWidth={4} />
              </div>
@@ -1099,7 +1108,7 @@ export default function VividAppV2() {
       }
 
       return (
-        <div className={`h-full p-6 pt-24 flex flex-col animate-in fade-in items-center ${themeClasses.bg}`}>
+        <div className={`h-full p-6 pt-24 flex flex-col animate-in fade-in items-center ${themeClasses.bg} overflow-y-auto`}>
            {showWelcomeToast && (
              <div className="absolute top-24 z-50 bg-[#2ECC71] text-black px-6 py-3 rounded-full font-bold shadow-2xl flex items-center gap-3 animate-in slide-in-from-top-10">
                <Check size={20} className="text-black"/> 
@@ -1249,7 +1258,10 @@ export default function VividAppV2() {
                         <div key={order.id} className={`flex items-center justify-between p-4 rounded-2xl transition-colors border ${isDark ? 'bg-black/40 border-white/5 hover:bg-black/60' : 'bg-gray-50 border-black/5 hover:bg-gray-100'}`}>
                            <div className="flex items-center gap-4">
                               <div className={`w-10 h-10 rounded-full flex items-center justify-center bg-[#FF8A00]/10 text-[#FF8A00]`}><Receipt size={18}/></div>
-                              <div><div className={`${themeClasses.text} font-bold text-sm`}>{order.itemName}</div><div className={`${themeClasses.textMuted} text-xs`}>{new Date(order.createdAt?.seconds * 1000).toLocaleDateString()}</div></div>
+                              <div>
+                                 <div className={`${themeClasses.text} font-bold text-sm`}>{order.itemName}</div>
+                                 <div className={`${themeClasses.textMuted} text-xs`}>{new Date(order.createdAt?.seconds * 1000).toLocaleDateString()}</div>
+                              </div>
                            </div>
                            <div className={`${themeClasses.text} font-mono font-bold`}>₦{order.total}</div>
                         </div>
